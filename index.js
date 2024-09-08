@@ -1,7 +1,16 @@
 //using templates
+// usually we require the core modules first
+// then the third party modules
+// then our own from the local file system
+
 const http = require("http")
 const url = require("url")
 const fs = require("fs")
+// node js will automatically know to go and search in the node modules folder
+const slugify = require("slugify")
+// slug is the last part of the url that contains a unique string that identifies the resource that the website is displaying
+// example: /product/fresh-avocados
+// the slug is (fresh-avocados)
 
 const replaceTemplate = require("./modules/replaceTemplate")
 
@@ -20,6 +29,11 @@ const tempCard = fs.readFileSync(
 
 const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, "utf-8")
 const dataObj = JSON.parse(data)
+
+const slugs = dataObj.map((el) => slugify(el.productName, { lower: true }))
+console.log(slugs)
+// convert to lower case
+// console.log(slugify("Fresh Avocados", { lower: true }))
 
 const server = http.createServer((req, res) => {
   const { query, pathname } = url.parse(req.url, true)
